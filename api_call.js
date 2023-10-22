@@ -1,45 +1,3 @@
-/*
-const OpenAI = require("openai");
-
-const openai = new OpenAI();
-
-async function main() {
-  const completion = await openai.chat.completions.create({
-    messages: [{ role: "system", content: "You are a helpful assistant." }],
-    model: "gpt-3.5-turbo",
-  });
-
-  const tokensUsed = completion.usage.total_tokens;
-  console.log(`Tokens used: ${tokensUsed}`);
-  console.log(completion.choices[0]);
-
-}
-
-main();
-
-
-const OpenAI = require("openai");
-
-const openai = new OpenAI();
-
-async function main() {
-  const completion = await openai.chat.completions.create({
-    messages: [
-      { role: "system", content: "You are a knowledgeable assistant that can explain various topics." },
-      { role: "user", content: "Can you explain the theory of relativity to me?" },
-    ],
-    model: "gpt-3.5-turbo",
-  });
-
-  const explanation = completion.choices[0].message.content;
-  console.log("Explanation:");
-  console.log(explanation);
-}
-
-main();
-*/
-
-
 const OpenAI = require("openai");
 const readline = require("readline");
 
@@ -51,27 +9,32 @@ const rl = readline.createInterface({
 });
 
 async function main() {
-  const userMessage = "Population diversity of India";
+  const userMessage = "One of the first argument forms that we will look at in §2.3 is modus ponens. We will see that it has the following valid form:";
   
   const completion = await openai.chat.completions.create({
     messages: [
-      { role: "system", content: "You are a knowledgeable assistant that can explain various topics. Give me an explain" },
+      { role: "system", content: "Create a program that accepts user input in the form of text and returns a simple, easy-to-understand explanation for the given topic or question" },
       { role: "user", content: userMessage },
     ],
     model: "gpt-3.5-turbo",
   });
 
-  const explanation = completion.choices[0].message.content;
+  let explanation = completion.choices[0].message.content;
+
+  // Add line breaks to format the explanation
+  explanation = explanation.replace(/§/g, "\n§");
+
   console.log("Explanation:");
   console.log(explanation);
 }
 
 function promptUser(question) {
-  return new Promise((resolve) => {
-    rl.question(question, (userInput) => {
-      resolve(userInput);
-    });
-  });
+    return new Promise((resolve) => {
+        rl.question(question, (userInput) => {
+          resolve(userInput);
+        });
+      });
+    
 }
 
 main().then(() => {
