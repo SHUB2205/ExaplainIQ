@@ -1,4 +1,37 @@
 
+
+
+const fs = require('fs');
+const pdf = require('pdf-parse');
+
+let s; // Declare s outside the Promise
+
+function extractTextFromPDF(pdfPath) {
+  return new Promise((resolve, reject) => {
+    const dataBuffer = fs.readFileSync(pdfPath);
+
+    pdf(dataBuffer)
+      .then(data => {
+        const text = data.text;
+        s = text; // Assign the extracted text to the s variable
+        resolve(text);
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+}
+
+// Usage:
+const pdfPath = 'test.pdf';
+
+extractTextFromPDF(pdfPath)
+  .then(extractedText => {
+    // You can use the extracted text in the 'extractedText' variable, and 's' is also available here
+    console.log(s); // Print the extracted text stored in 's'
+    console.log("\n");
+    console.log("\n");
+
 const OpenAI = require("openai");
 const readline = require("readline");
 
@@ -9,11 +42,8 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-let s= "One of the first argument forms that we will look at in §2.3 is modus ponens. We will see that it has the following valid form:";
-  
-
 async function main() {
-  let userMessage = s; 
+  let userMessage = s;
   
   while (true) {
     // Generate an explanation using OpenAI's API
@@ -57,3 +87,8 @@ function promptUser(question) {
 main().then(() => {
   rl.close();
 });
+
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
