@@ -53,4 +53,3 @@ function promptUser(question) {
 main().then(() => {
   rl.close();
 });
-
