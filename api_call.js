@@ -1,3 +1,4 @@
+
 const OpenAI = require("openai");
 const readline = require("readline");
 
@@ -8,8 +9,11 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
+let s= "One of the first argument forms that we will look at in §2.3 is modus ponens. We will see that it has the following valid form:";
+  
+
 async function main() {
-  let userMessage = "One of the first argument forms that we will look at in §2.3 is modus ponens. We will see that it has the following valid form:";
+  let userMessage = s; 
   
   while (true) {
     // Generate an explanation using OpenAI's API
