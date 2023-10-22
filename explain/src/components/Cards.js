@@ -25,8 +25,8 @@ function Cards() {
             />
             <CardItem
               src="/images/img-7.jpeg"
-              text="Jody Mustafa"
-              label="Front end developer"
+              text="Front end Developer"
+              label="Jody Mustafa"
               path="/services"
             />
             <CardItem
