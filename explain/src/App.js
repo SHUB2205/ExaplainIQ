@@ -5,6 +5,7 @@ import React from "react";
 import Home from "./components/pages/Home";
 import Login from "./Login";
 import AboutUs from "./components/AboutUs";
+import PdfTextSelection from "./pdfTextSelector";
 function App() {
   return (
     <>
@@ -15,6 +16,7 @@ function App() {
           <Route path="/login" exact Component={Login} />
         </Routes>
       </Router>
+      <PdfTextSelection/>
       <AboutUs />
     </>
   );
