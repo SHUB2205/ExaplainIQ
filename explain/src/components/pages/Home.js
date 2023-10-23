@@ -8,8 +8,8 @@ function Home() {
     <>
       <HeroSection />
       <Cards />
-      <Link to="/login">Login</Link> {/* Link to the login page */}
-      <Link to="/signup">Sign Up</Link> {/* Link to the sign-up page */}
+      {/* <Link to="/login">Login</Link> Link to the login page */}
+      {/* <Link to="/signup">Sign Up</Link> Link to the sign-up page */}
     </>
   );
 }

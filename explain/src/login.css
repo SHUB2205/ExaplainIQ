@@ -1,5 +1,6 @@
+
 body {
-    background-image: url('explain/public/images/img-9.jpg');
+    background-image: url('/Users/jodymustafa/Documents/GitHub/ExplainIQ/explain/public/images/img-9.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -11,8 +12,14 @@ body {
   }
   
   .container {
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 20px;
+    display:flex;
+    flex-direction: column;
+    margin: auto;
+    margin-top:200px;
+    width: 600px;
+    background-color: rgba(255, 255, 255, 0.868);
+    padding-bottom: 30px;
+    width:600px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     text-align: center;
@@ -21,12 +28,14 @@ body {
   form {
     display: flex;
     flex-direction: column;
+    width: 100%;
   }
   
   .input-container {
     display: flex;
     flex-direction: column;
     margin: 10px 0;
+    width:100%;
   }
   
   input[type="text"],
@@ -43,21 +52,37 @@ body {
   button[type="submit"] {
     background-color: #88bf89;
     color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
+    width: 170px;
+    height:59px;
+    align-items: center;
+    justify-content: center ;
+    margin: 8px 10px;
+    border-radius: 50px;
+    font-size: 20px;
+    font-weight: 700;
     cursor: pointer;
     border-radius: 5px;
+    display:inline-block;
   }
   
   button[type="submit"]:hover {
     opacity: 0.8;
   }
   
+  
   h2 {
-    color: #88bf89;
+    color: #60000000;
   }
   
   label {
     color: #333;
+  }
+  .navbar {
+    background-color: #333;
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    /* Other styling for your navbar */
   }

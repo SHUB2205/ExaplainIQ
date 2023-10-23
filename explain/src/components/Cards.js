@@ -12,13 +12,13 @@ function Cards() {
         <div className="cards__wrapper">
           <ul className="cards__items">
             <CardItem
-              src="/images/img-2.jpg"
+              src="images/Harshit.jpg"
               text="Back-end Developer"
               label="Harshit Suri"
               path="/services"
             />
             <CardItem
-              src="/images/img-6.jpeg"
+              src="images/shub.jpg"
               text="Backend Developer"
               label="Shubhankar Parashar"
               path="/services"
@@ -30,7 +30,7 @@ function Cards() {
               path="/services"
             />
             <CardItem
-              src="/images/img-8.jpeg"
+              src="images/Adarsh.jpg"
               text="Front end Developer"
               label="Adarsh Kessani"
               path="/services"

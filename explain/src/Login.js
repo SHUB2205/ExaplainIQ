@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {useNavigate} from 'react-router-dom';
 import "./login.css";
 
+
 function Login({ handleLogin }) {
   const [Name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -17,6 +18,7 @@ function Login({ handleLogin }) {
   };
 
   return (
+    <div className="login">
     <div className="container">
       <form onSubmit={handleSubmit}>
         <h2>Login</h2>
@@ -32,8 +34,12 @@ function Login({ handleLogin }) {
           <label>Password:</label>
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
+        <div className="button-container">
         <button type="submit">Log In</button>
+        <button type="submit">Sign Up</button>
+        </div>
       </form>
+    </div>
     </div>
   );
 }
