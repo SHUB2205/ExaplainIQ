@@ -1,17 +1,15 @@
 import express from "express"
-import colors from "colors";
-import dotenv from 'dotenv';
 import morgan from "morgan";
-import connectDB from "./config/db.js";
+//import connectDB from "./config/db.js";
 
 import cors from 'cors';
-import productRoutes from "./routes/apiRoute.js"
+import apiRoute from "./routes/apiRoute.js"
 
 
 
 
 //database config
-connectDB();
+//connectDB();
 
 //rest object
 const app = express()
@@ -21,7 +19,7 @@ app.use(express.json())
 app.use(morgan('dev'))
 app.use(cors())
 //routes
-app.use('/api/v1/route', authRoutes)
+app.use('/api/v1/route', apiRoute)
 
 //rest api
 app.get("/", (req, res) => {

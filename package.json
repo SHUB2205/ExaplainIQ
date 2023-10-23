@@ -1,9 +1,27 @@
 {
+  "name": "exaplainiq",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "npm start --prefix ./explain",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
   "dependencies": {
+    "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "fs": "^0.0.1-security",
     "mongoose": "^7.6.3",
     "morgan": "^1.10.0",
-    "react-router-dom": "^6.17.0"
+    "nodemon": "^3.0.1",
+    "openai": "^4.12.4",
+    "pdf-parse": "^1.1.1",
+    "react-router-dom": "^6.17.0",
+    "readline": "^1.3.0",
+    "server": "^1.0.38"
   }
 }

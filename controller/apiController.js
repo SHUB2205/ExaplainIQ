@@ -1,262 +1,105 @@
-
-import slugify from 'slugify';
-
-
-
-export const apiController = async (req, res) => {
+export const pdfController = async (req, res) => {
 
     try {
-        const { name, slug, description, price, category, quantity, shipping } = req.fields
+            const fs = require('fs');
+            const pdf = require('pdf-parse');
+            let s; // Declare s outside the Promise
 
-        const { photo } = req.files
-        //validation
-        switch (true) {
-            case !name:
-                return res.status(500).send({ error: "Name is Required" });
-            case !description:
-                return res.status(500).send({ error: "Description is Required" });
-            case !price:
-                return res.status(500).send({ error: "Price is Required" });
-            case !category:
-                return res.status(500).send({ error: "Category is Required" });
-            case !quantity:
-                return res.status(500).send({ error: "Quantity is Required" });
-            case photo && photo.size > 1000000:
-                return res
-                    .status(500)
-                    .send({ error: "photo is Required and should be less then 1mb" });
-        }
+            function extractTextFromPDF(pdfPath) {
+            return new Promise((resolve, reject) => {
+                const dataBuffer = fs.readFileSync(pdfPath);
 
+                pdf(dataBuffer)
+                .then(data => {
+                    const text = data.text;
+                    s = text; // Assign the extracted text to the s variable
+                    resolve(text);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+            });
+            }
+// Usage:
+            const { pdfPath  } = req.body;
 
-        const products = new productModel({ ...req.fields, slug: slugify(name) })
-        if (photo) {
-            products.photo.data = fs.readFileSync(photo.path)
-            products.photo.contentType = photo.type;
-        }
-        await products.save();
-        res.status(201).send({
-            success: true,
-            message: "Product Created Successfully",
-            products,
-        });
+            extractTextFromPDF(pdfPath)
+            .then(extractedText => {
+                // You can use the extracted text in the 'extractedText' variable, and 's' is also available here
+                console.log(s); // Print the extracted text stored in 's'
+                console.log("\n");
+                console.log("\n");
 
+            const OpenAI = require("openai");
+            const readline = require("readline");
 
-    } catch (error) {
-        console.log(error)
-        res.status(500).send({
-            success: false,
-            error,
-            message: "Error in Creating Product"
-        })
-    }
+            const openai = new OpenAI();
 
-}
+            const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout
+            });
 
-//get all products
-export const getProductController = async (req, res) => {
-    try {
-        const products = await productModel.find({}).populate('category', "-photo").select("-photo").limit(20).sort({ createdAt: -1 })
-        res.status(200).send({
-            success: true,
-            countTotal: products.length,
-            message: 'All Products',
-            products,
-            countTotal: products.length,
-        })
-    } catch (error) {
-        console.log(error)
-        res.status(500).send({
-            success: false,
-            message: "Error in gettting all products",
-            error
-        })
-    }
-
-}
-
-//get single product
-export const getSingleProductController = async (req, res) => {
-    try {
-        const product = await productModel.findOne({ slug: req.params.slug }).select("-photo").populate('category', "-photo")
-        res.status(200).send({
-            success: true,
-            message: "single product fetched",
-            product
-        })
-    } catch (error) {
-        console.log(error)
-        res.status(500).send({
-            success: false,
-            message: "Error in getting single product",
-            error
-        })
-    }
-}
-
-//get photo
-
-export const productPhotoController = async (req, res) => {
-    try {
-        const product = await productModel.findById(req.params.pid).select("photo")
-        if (product.photo.data) {
-            res.set("Content-type", product.photo.contentType)
-            return res.status(200).send(product.photo.data)
-        }
-    } catch (error) {
-        console.log(error)
-        res.status(500).send({
-            success: false,
-            message: "Error in getting product photo",
-            error
-        })
-    }
-}
-
-//delete controller
-export const deleteProductController = async (req, res) => {
-    try {
-        await productModel.findByIdAndDelete(req.params.pid).select("-photo")
-        res.status(200).send({
-            success: true,
-            message: "Product Deleted Successfully"
-        })
-    } catch (error) {
-        console.log(error)
-        res.status(500).send({
-            success: false,
-            message: "Error while deleting product",
-            error
-        })
-
-    }
-}
-
-
-//update products
-export const updateProductController = async (req, res) => {
-    try {
-        const { name, description, price, category, quantity, shipping } =
-            req.fields;
-        const { photo } = req.files;
-        //Validation
-        switch (true) {
-            case !name:
-                return res.status(500).send({ error: "Name is Required" });
-            case !description:
-                return res.status(500).send({ error: "Description is Required" });
-            case !price:
-                return res.status(500).send({ error: "Price is Required" });
-            case !category:
-                return res.status(500).send({ error: "Category is Required" });
-            case !quantity:
-                return res.status(500).send({ error: "Quantity is Required" });
-            case photo && photo.size > 1000000:
-                return res
-                    .status(500)
-                    .send({ error: "photo is Required and should be less then 1mb" });
-        }
-
-        const products = await productModel.findByIdAndUpdate(
-            req.params.pid,
-            { ...req.fields, slug: slugify(name) },
-            { new: true }
-        );
-        if (photo) {
-            products.photo.data = fs.readFileSync(photo.path);
-            products.photo.contentType = photo.type;
-        }
-        await products.save();
-        res.status(201).send({
-            success: true,
-            message: "Product Updated Successfully",
-            products,
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({
-            success: false,
-            error,
-            message: "Error in Updte product",
-        });
-    }
-};
-
-//product count
-export const productCountController = async (req, res) => {
-    try {
-        const total = await productModel.find({}).estimatedDocumentCount()
-        res.status(200).send({
-            success: true,
-            total
-        })
-    } catch (error) {
-        console.log(error)
-        res.status(400).send({
-            message: "Error in product count",
-            error,
-            success: false
-        })
-    }
-}
-//porudct list based on page
-export const productListController = async (req, res) => {
-    try {
-        const perPage = 6
-        const page = req.params.page ? req.params.page : 1
-        const products = await productModel.find({}).select("-photo").skip((page - 1) * perPage).limit(perPage).sort({ createdAt: -1 })
-        res.status(200).send({
-            success: true,
-            products
-        })
-    } catch (error) {
-        console.log(error)
-        res.status(400).send({
-            success: false,
-            message: "Error in per page ctrl",
-            error
-        })
-    }
-}
-
-// search product
-export const searchProductController = async (req, res) => {
-    try {
-        const { keyword } = req.params;
-        const results = await productModel
-            .find({
-                $or: [
-                    { name: { $regex: keyword, $options: "i" } },
-                    { description: { $regex: keyword, $options: "i" } },
+            async function main() {
+            let userMessage = s;
+            
+            while (true) {
+                // Generate an explanation using OpenAI's API
+                const completion = await openai.chat.completions.create({
+                messages: [
+                    { role: "system", content: "Create a program that accepts user input in the form of text and returns a simple, easy-to-understand explanation for the given topic or question" },
+                    { role: "user", content: userMessage },
                 ],
-            })
-            .select("-photo");
-        res.json(results);
-    } catch (error) {
-        console.log(error);
-        res.status(400).send({
-            success: false,
-            message: "Error In Search Product API",
-            error,
-        });
-    }
-};
+                model: "gpt-3.5-turbo",
+                });
 
-//get product by category
-export const productCategoryController = async (req, res) => {
-    try {
-        const category = await categoryModel.findOne({ slug: req.params.slug }).select("-photo")
-        const products = await productModel.find({ category }).populate('category', "-photo").select("-photo")
-        res.status(200).send({
-            success: true,
-            category,
-            products
-        })
+                // Extract and format the explanation
+                let explanation = completion.choices[0].message.content;
+                explanation = explanation.replace(/§/g, "\n§");
+
+                // Display the explanation to the user
+                console.log("Explanation:");
+                console.log(explanation);
+
+                // Ask the user if they want to ask follow-up questions
+             //   const response = await promptUser("Do you have any follow-up questions? (yes/no): ");
+
+           //     if (response.toLowerCase() === "no") {
+          //      break; // Exit the loop if the user says "no"
+           //     }
+
+                // Ask the user for their follow-up question
+           //     userMessage = await promptUser("What is your follow-up question? ");
+           }
+            }
+
+        //    function promptUser(question) {
+       //     return new Promise((resolve) => {
+       //         // Prompt the user for input
+        //        rl.question(question, (userInput) => {
+       //         resolve(userInput);
+        //        });
+       //     });
+       //     }
+
+            main().then(() => {
+            rl.close();
+            });
+
+            res.status(201).send({
+                success: true,
+                message: "explanation sent succsfully",
+                explanation,
+            });
+            })
+      
     } catch (error) {
         console.log(error)
-        res.status(400).send({
+        res.status(500).send({
             success: false,
             error,
-            message: "Error while getting products by category"
+            message: "Error in sending explanation"
         })
     }
+
 }

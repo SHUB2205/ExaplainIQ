@@ -19,14 +19,17 @@ const PdfTextSelection = () => {
 
     try {
       // Send the PDF to your server for processing
-      const response = await fetch('', {
+      const response = await fetch('/route', {
         method: 'POST',
         body: fileData,
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to upload PDF');
+      if (response?.success) {
+      
+      console.log("done")
+      } else {
+        console.log("error")
       }
+     
 
       const pdfData = await response.blob();
 

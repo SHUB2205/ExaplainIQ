@@ -1,10 +1,10 @@
 import express from "express";
-import { apiController } from "../controller/apiController.js";
+import { pdfController } from "../controller/apiController.js";
 //payment routes
 const router = express.Router()
 
 
-//order verification
+
 router.post("/route", pdfController)
 
 
